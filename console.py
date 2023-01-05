@@ -134,10 +134,15 @@ class HBNBCommand(cmd.Cmd):
                 item = item.split("=")
                 att_name = item[0]
                 att_val = eval(item[1])
+                if type(att_val) is str and "_" in att_val:
+                    while "_" in att_val:
+                        indx = att_val.find("_")
+                        att_val = att_val[:indx] + " " + att_val[indx + 1:]
+
                 new_instance.__dict__[att_name] = att_val
 
         storage.save()
-        print(new_instance.id)
+        print(new_instance)
         storage.save()
 
     def help_create(self):
