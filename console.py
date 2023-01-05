@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
             for item in args:
                 item = item.split("=")
                 att_name = item[0]
-                att_val = item[1]
+                att_val = eval(item[1])
                 new_instance.__dict__[att_name] = att_val
 
         storage.save()
