@@ -11,22 +11,21 @@ class FileStorage:
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
         if cls:
-            dct = {}
-            for k, v in self.__objects.items():
-                dct[k] = v
-            return dct
+            return FileStorage.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        self.__objects['{}.{}'.format(obj.__class__.__name__, obj.id)] = obj
+        cls_of_obj = obj.__class__.__name__
+        self.all(cls_of_obj).update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """Saves storage dictionary to file"""
-        temp = {}
-        for key, val in self.__objects.items():
-            temp[key] = val.to_dict()
-        with open(FileStorage.__file_path, 'w', encoding="utf-8") as f:
-            f.write(json.dumps(temp))
+        with open(FileStorage.__file_path, 'w') as f:
+            temp = {}
+            temp.update(FileStorage.__objects)
+            for key, val in temp.items():
+                temp[key] = val.to_dict()
+            json.dump(temp, f)
 
     def reload(self):
         """Loads storage dictionary from file"""
@@ -45,15 +44,14 @@ class FileStorage:
                   }
         try:
             temp = {}
-            with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
-                line = f.read()
-                temp = json.loads(line)
+            with open(FileStorage.__file_path, 'r') as f:
+                temp = json.load(f)
                 for key, val in temp.items():
-                    self.__objects[key] = classes[val['__class__']](**val)
+                    self.all(classes[val['__class__']])[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
 
     def delete(self, obj=None):
-        """Delete obj from __objects if it's inside"""
+        """Delete obj from __objects"""
         if obj:
             del self.__objects['{}.{}'.format(obj.__class__.__name__, obj.id)]
