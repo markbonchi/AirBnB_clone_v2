@@ -16,12 +16,11 @@ class FileStorage:
                 if val.__class__ == cls:
                     dct[key] = val
             return dct
-
         return self.__objects
+
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        """cls_of_obj = obj.__class__.__name__"""
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
