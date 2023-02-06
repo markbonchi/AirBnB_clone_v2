@@ -3,7 +3,7 @@
 """
 
 from flask import Flask
-
+from markupsafe import escape
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -19,6 +19,12 @@ def hbnb():
 	"""route display
 	"""
 	return "HBNB"
+
+@app.route('/c/<text>')
+def print_text(text):
+        """display <text>
+        """
+        return "C {}".format(escape(text.replace("_", " ")))
 
 if __name__ == "__main__":
 	"""run app on port 5000
