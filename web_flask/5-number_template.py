@@ -13,12 +13,10 @@ Routes:
 	    +H1 tag: "Number: n" inside the tag BODY
 You must use the option strict_slashes=False in your route definition
 """
-
-
-
 from flask import Flask
 from flask import render_template
 from markupsafe import escape
+
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
