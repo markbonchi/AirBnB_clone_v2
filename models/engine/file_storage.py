@@ -60,3 +60,8 @@ class FileStorage:
         """Delete obj from __objects"""
         if obj:
             del self.__objects['{}.{}'.format(obj.__class__.__name__, obj.id)]
+
+    def close(self):
+        """ calls reload()
+        """
+        self.reload()
